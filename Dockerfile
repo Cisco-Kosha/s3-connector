@@ -8,12 +8,14 @@ RUN cd /tmp && pipenv lock --keep-outdated --requirements > requirements.txt
 
 RUN pip install -r /tmp/requirements.txt
 
-WORKDIR /app
 
-COPY ./app ./
+COPY ./app /app
+COPY main.py /
 
 RUN pip install -r /tmp/requirements.txt
 
-EXPOSE 80
+EXPOSE 8002
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+WORKDIR /
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
