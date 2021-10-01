@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, FastAPI, File
 from starlette.responses import JSONResponse
@@ -11,19 +11,18 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[Any])
-def list_objects(bucket=Depends(crud_bucket.CRUDBucket)) -> Any:
-    objects = bucket.list_ids()
-    return objects
-
-
-@router.get("/<file>", response_model=List[Any])
-def get_object(file: str, bucket=Depends(crud_bucket.CRUDBucket)) -> Any:
-    obj = bucket.load(file)
-    return JSONResponse(obj)
+def list_objects(file: Optional[str] = None, bucket=Depends(crud_bucket.CRUDBucket)) -> Any:
+    if file:
+        obj = bucket.load(file)
+        return JSONResponse(obj)
+    else:
+        objects = bucket.list_ids()
+        return objects
 
 
 @router.post("/", response_model=List[Any])
 def save_object(prefix: str, file: UploadFile = File(...), bucket=Depends(crud_bucket.CRUDBucket)) -> Any:
+    print(file)
     filename = file.filename
     if prefix:
         filename = prefix + "/" + file.filename
@@ -31,7 +30,7 @@ def save_object(prefix: str, file: UploadFile = File(...), bucket=Depends(crud_b
     return JSONResponse({"status": "success"})
 
 
-@router.delete("/<file>", response_model=List[Any])
+@router.delete("/{file}", response_model=List[Any])
 def delete_object(file: str, bucket=Depends(crud_bucket.CRUDBucket)) -> Any:
     res = bucket.delete_obj(file)
     return JSONResponse(res)
