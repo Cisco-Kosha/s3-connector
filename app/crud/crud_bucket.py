@@ -9,7 +9,6 @@ from schema import Schema
 from app.core.config import settings
 
 s3 = settings.s3_init()
-bucket_name = settings.get_bucket_name()
 
 
 def list_files(bucket_name):
@@ -39,7 +38,7 @@ class CRUDBucket:
         return cls.SCHEMA.validate(obj)
 
     @classmethod
-    def save(cls, obj, filename) -> str:
+    def save(cls, bucket_name, obj, filename) -> str:
         # We affect an id if there isn't one
         obj = cls.validate(obj)
         s3.put_object(
@@ -50,7 +49,7 @@ class CRUDBucket:
         return filename
 
     @classmethod
-    def load(cls, file_name):
+    def load(cls, bucket_name, file_name):
         obj = s3.get_object(
             Bucket=bucket_name,
             Key=file_name,
@@ -59,7 +58,7 @@ class CRUDBucket:
         return obj
 
     @classmethod
-    def delete_obj(cls, file):
+    def delete_obj(cls, bucket_name, file):
         s3.delete_object(
             Bucket=bucket_name,
             Key=file,
@@ -67,7 +66,7 @@ class CRUDBucket:
         return {'deleted_id': file}
 
     @classmethod
-    def list_ids(cls):
+    def list_ids(cls, bucket_name):
         file_names = []
         file_list = list_files(bucket_name)
         for file in file_list:

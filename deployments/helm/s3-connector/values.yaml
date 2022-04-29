@@ -1,0 +1,40 @@
+# Default values for hello-client.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appName: s3-connector
+appVersion: v1
+
+replicaCount: 1
+
+image:
+  repository: 91pavan
+  tag: latest
+  name: kosha-s3-connector
+  pullPolicy: IfNotPresent
+
+service:
+  name: s3-connector
+  port: 8002
+
+connector:
+  aws_server_public_key:
+  aws_server_secret_key:
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
