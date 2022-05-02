@@ -2,7 +2,7 @@
 
 def pipelinesettings = [
   deploy: [
-    [name: "s3-connector" ]        // Containers to publish
+    [name: "kosha/s3-connector" ]        // Containers to publish
   ],
 
   tagversion: "${env.BUILD_ID}",    // Docker tag version
