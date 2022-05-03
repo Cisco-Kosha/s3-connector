@@ -8,9 +8,10 @@ appVersion: v1
 replicaCount: 1
 
 image:
-  repository: 91pavan
+  org: containers.cisco.com
+  repository: kosha
   tag: latest
-  name: kosha-s3-connector
+  name: gsts3-connector
   pullPolicy: IfNotPresent
 
 service:
