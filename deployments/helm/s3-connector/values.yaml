@@ -11,7 +11,7 @@ image:
   org: containers.cisco.com
   repository: kosha
   tag: latest
-  name: gsts3-connector
+  name: s3-connector
   pullPolicy: IfNotPresent
 
 service:
