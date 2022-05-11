@@ -1,0 +1,4 @@
+{
+  "AWS_SERVER_SECRET_KEY": "Secret access key",
+  "AWS_SERVER_PUBLIC_KEY": "Access key Id"
+}
