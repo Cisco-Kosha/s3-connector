@@ -1,12 +1,11 @@
 from typing import List, Any
 
-import json
-import boto3
-import os
-import uuid
 from schema import Schema
 
-from app.core.config import settings
+from app.utils import exception
+from botocore.exceptions import ClientError
+
+from app.core.config import settings, logger
 
 s3 = settings.s3_init()
 
@@ -16,6 +15,12 @@ def list_files(bucket_name):
     response = s3.list_objects(Bucket=bucket_name)
     for content in response.get('Contents', []):
         yield content.get('Key')
+
+
+def list_all_buckets():
+    # Get all bucket names
+    logger.info("listing all buckets")
+    return [bucket.name for bucket in s3.buckets.all()]
 
 
 class CRUDBucket:
@@ -38,37 +43,53 @@ class CRUDBucket:
         return cls.SCHEMA.validate(obj)
 
     @classmethod
-    def save(cls, bucket_name, obj, filename) -> str:
+    def save(cls, bucket_name, file, filename) -> str:
         # We affect an id if there isn't one
-        obj = cls.validate(obj)
-        s3.put_object(
-            Bucket=bucket_name,
-            Body=obj.file,
-            Key=filename
-        )
+        logger.info("saving file with name {0} in bucket: {1}", filename, bucket_name)
+        cls.validate(file)
+        obj = s3.Object(bucket_name, filename)
+        obj.put(Body=file.file)
         return filename
 
     @classmethod
-    def load(cls, bucket_name, file_name):
-        obj = s3.get_object(
-            Bucket=bucket_name,
-            Key=file_name,
-        )
-        obj = obj['Body'].read().decode('utf-8')
-        return obj
+    def load(cls, bucket_name, file_name) -> (Any, str):
+        bucket = s3.Bucket(bucket_name)
+        if bucket.creation_date:
+            for obj in bucket.objects.all():
+                if file_name == obj.key:
+                    file_content = obj.get()['Body'].read().decode('utf-8')
+                    return file_content, None
+                else:
+                    logger.error("no file with name {0} in bucket: {1} exists", file_name, bucket_name)
+                    raise exception.NoSuchFileExists('No such file exists')
+        else:
+            logger.error("no bucket with name {0} exists", bucket_name)
+            raise exception.NoSuchBucketExists('No such bucket exists')
+        return None, None
 
     @classmethod
     def delete_obj(cls, bucket_name, file):
-        s3.delete_object(
-            Bucket=bucket_name,
-            Key=file,
-        )
-        return {'deleted_id': file}
+        logger.info("deleting file with name {0} in bucket: {1}", file, bucket_name)
+        return s3.Object(bucket_name, file).delete()
 
     @classmethod
-    def list_ids(cls, bucket_name):
-        file_names = []
-        file_list = list_files(bucket_name)
-        for file in file_list:
-            file_names.append(file)
-        return file_names
+    def create(cls, bucket_name, region):
+        s3 = settings.s3_init(region)
+        logger.info("creating bucket with name {1} in region {1}", bucket_name, region)
+        try:
+            location = {'LocationConstraint': region}
+            bucket = s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration=location)
+        except ClientError as e:
+            raise e
+        return bucket
+
+
+    @classmethod
+    def list_ids(cls, bucket_name) -> (Any, str):
+        my_bucket = s3.Bucket(bucket_name)
+        if my_bucket.creation_date:
+            logger.info("listing all files in bucket {0}", bucket_name)
+            return [bucket.key for bucket in my_bucket.objects.all()], None
+        else:
+            logger.error("no bucket with name {0} exists", bucket_name)
+            raise exception.NoSuchBucketExists('No such bucket exists')
