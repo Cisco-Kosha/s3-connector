@@ -19,8 +19,8 @@ service:
   port: 8002
 
 connector:
-  aws_server_public_key:
-  aws_server_secret_key:
+  aws_access_key_id:
+  aws_secret_access_key:
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
