@@ -10,12 +10,12 @@ from fastapi import Request
 router = APIRouter()
 
 
-@router.get("/", response_model=Any)
+@router.get("/list", response_model=Any)
 def get_connector_spec():
     return JSONResponse({"AWS_SECRET_ACCESS_KEY": "AWS Secret Access Key", "AWS_ACCESS_KEY_ID": "AWS Access Key Id"})
 
 
-@router.post("/check", response_model=Any)
+@router.post("/test", response_model=Any)
 async def check_connector_spec(request: Request):
     data = await request.json()
     if data is not None:
