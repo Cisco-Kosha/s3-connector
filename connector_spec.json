@@ -1,4 +1,27 @@
 {
-  "AWS_SERVER_SECRET_KEY": "Secret access key",
-  "AWS_SERVER_PUBLIC_KEY": "Access key Id"
+  "version": "2.0.0",
+  "fields": [
+    {
+      "field": "AWS_SERVER_PUBLIC_KEY",
+      "displayName": "AWS Access Key ID",
+      "type": "String",
+      "minLength": 3,
+      "maxLength": 40,
+      "required": true,
+      "description": "AWS Access Key ID",
+      "example": "AKIAIOSFODNN7EXAMPLE",
+      "helpSection": "Open the IAM console at https://console.aws.amazon.com/iam/.\n\nOn the navigation menu, choose Users.\n\nChoose your IAM user name (not the check box).\n\nOpen the Security credentials tab, and then choose Create access key.\n\nTo see the new access key, choose Show. Your credentials resemble the following:\n\nAccess key ID: AKIAIOSFODNN7EXAMPLE\n\nSecret access key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\n\nTo download the key pair, choose Download .csv file. Store the .csv file with keys in a secure location."
+    },
+    {
+      "field": "AWS_SERVER_SECRET_KEY",
+      "displayName": "AWS Secret Access Key",
+      "type": "String",
+      "minLength": 10,
+      "maxLength": 60,
+      "required": true,
+      "description": "AWS Secret Access Key",
+      "example": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+      "helpSection": "Open the IAM console at https://console.aws.amazon.com/iam/.\n\nOn the navigation menu, choose Users.\n\nChoose your IAM user name (not the check box).\n\nOpen the Security credentials tab, and then choose Create access key.\n\nTo see the new access key, choose Show. Your credentials resemble the following:\n\nAccess key ID: AKIAIOSFODNN7EXAMPLE\n\nSecret access key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\n\nTo download the key pair, choose Download .csv file. Store the .csv file with keys in a secure location."
+    }
+  ]
 }
