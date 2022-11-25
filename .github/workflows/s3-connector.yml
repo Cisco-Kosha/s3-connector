@@ -1,4 +1,4 @@
-name: postgres-connector-ci
+name: s3-connector-ci
 
 on:
   push:
