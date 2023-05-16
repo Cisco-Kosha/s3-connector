@@ -1,34 +1,30 @@
-# Kosha S3 Connector
+# Kosha Amazon S3 Connector
 
-Amazon S3 can be used to store and retrieve any amount of data using highly scalable, reliable, fast, and inexpensive data storage.
+Amazon S3 (Simple Storage Service) is a cloud-based object storage service that enables you to store and retrieve large amounts of data over the internet, using highly scalable, reliable, fast, and inexpensive data storage.
 
-![S3](images/amazon-s3.png)
+The Kosha Amazon S3 connector enables you to perform REST API operations from the Amazon S3 API in your Kosha workflow or custom application. 
 
-This Connector API exposes REST API endpoints to perform any operations on Amazon S3 service in a simple, quick and intuitive fashion.
+## Useful Actions
 
-It describes various API operations, related request and response structures, and error codes. 
+You can use the Kosha Amazon S3 connector to manage S3 buckets and retrieve metrics.
 
-## Build
+Refer to the Kosha Amazon S3 connector [API specification](openapi.json) for details.
 
-To start the virtualenv of the project, run
-```
-    pipenv shell
-```
+### Buckets
 
-To install dependencies, run
-```
-    pipenv install
-```
+Buckets are the basic unit of storage in S3, storing and organizing data as objects. Use the S3 Buckets API to:
 
-## Run
+* Create buckets
+* List buckets
+* Save, delete, and list objects in buckets
 
-To run the project, simply provide env variables to supply the aws server access key, secret key and the S3 bucket name to connect to.
+### Metrics
 
+The S3 Metrics API serves Prometheus metrics related to the performance and usage of your S3 buckets.
 
-```bash
-AWS_SERVER_PUBLIC_KEY=<PUBLIC_KEY> AWS_SERVER_SECRET_KEY=<SECRET_KEY>  uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8002
-```
+## Authentication
 
-This will start a worker and expose the API on port `8002` on the host machine 
+To authenticate when provisioning the Kosha Amazon S3 connector, you need your:
 
-Swagger docs is available at `https://localhost:8002/docs`
+* AWS access key ID
+* AWS secret access key
